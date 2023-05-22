@@ -1,0 +1,61 @@
+body {
+  width: 300px;
+  height: 200px;
+  padding: 20px;
+  background-color: #add8e6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.minimalist-button {
+  font-size: 16px;
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  background-color: #4caf50;
+  color: white;
+}
+
+.minimalist-button:hover {
+  background-color: #45a049;
+}
+
+.leagues {
+  width: 100%;
+}
+
+#league-list {
+  padding: 0;
+  gap: 20px;
+  list-style-type: none;
+}
+
+#league-list > li {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#league-list > li:last-child {
+  border-bottom: none;
+}
+
+ul {
+  font-size: large;
+}
+
+.checkbox {
+  margin-right: 10px;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #ccc;
+  background-color: white;
+  border-radius: 5px;
+  align-items: center;
+  justify-content: center;
+}
