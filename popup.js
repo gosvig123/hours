@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const unrealButton = document.getElementById("unreal-button");
   const leagueList = document.getElementById("league-list");
+  const sendData = document.getElementById("send-data");
 
   // Function to generate and display the league list
   function displayLeagueList(leagues) {
@@ -23,7 +24,26 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  sendData.addEventListener("click", () => {
+    passLeagueList();
+  });
+
   unrealButton.addEventListener("click", () => {
     chrome.runtime.sendMessage({ action: "getEspnInfo" });
   });
 });
+
+async function passLeagueList() {
+  await fetch("https://eocy7xljz6ao3x5.m.pipedream.net/update", {
+    method: "PATCH",
+    headers: {},
+    body: JSON.stringify({
+      extension_token: "token from the extension",
+      id: "1684616983768x979685721224051500",
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      displayLeagueList(data.competitions);
+    });
+}
