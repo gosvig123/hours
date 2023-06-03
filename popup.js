@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (result.teamIds) {
       displayLeagueList(result.teamIds);
       buttonContainer.style.display = 'none';
+    } else {
+      sendData.style.display = 'none';
+      leaguesHeader.innerText = '';
     }
   });
 
@@ -24,13 +27,24 @@ document.addEventListener('DOMContentLoaded', () => {
   unrealButton.addEventListener('click', () => {
     chrome.runtime.sendMessage({ action: 'getEspnInfo' });
     buttonContainer.style.display = 'none';
-    chrome.storage.local.get(['teamIds'], (result) => {
-      if (result.teamIds) {
-        displayLeagueList(teamIds.teamIds);
-        buttonContainer.style.display = 'none';
-      }
-    });
   });
+
+  // Listen for messages from the background script
+  chrome.runtime.onMessage.addListener(
+    (request, sender, sendResponse) => {
+      if (request.action === 'dataStored') {
+        // New data has been stored, retrieve it and update the display
+        chrome.storage.local.get(['teamIds'], (result) => {
+          if (result.teamIds) {
+            displayLeagueList(result.teamIds);
+            buttonContainer.style.display = 'none';
+            sendData.style.display = 'block';
+            leaguesHeader.innerText = 'My Leagues';
+          }
+        });
+      }
+    }
+  );
 });
 
 async function passLeagueList() {

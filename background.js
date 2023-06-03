@@ -13,16 +13,23 @@ chrome.runtime.onMessage.addListener(
               { action: 'getEspnInfo' },
               (response) => {
                 if (
-                  (response && response.teamIds,
-                  response.SWID,
-                  response.espnCookies)
+                  response &&
+                  response.teamIds &&
+                  response.SWID &&
+                  response.espnCookies
                 ) {
-                  // Store the received teamIds in storage
-                  chrome.storage.local.set({
-                    teamIds: response.teamIds,
-                    SWID: response.SWID,
-                    espnCookies: response.espnCookies,
-                  });
+                  chrome.storage.local.set(
+                    {
+                      teamIds: response.teamIds,
+                      SWID: response.SWID,
+                      espnCookies: response.espnCookies,
+                    },
+                    () => {
+                      chrome.runtime.sendMessage({
+                        action: 'dataStored',
+                      });
+                    }
+                  );
                 }
               }
             );
