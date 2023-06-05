@@ -6,21 +6,28 @@
   </head>
   <body>
     <h1>Unreal Insiders</h1>
-    <div id="button-container">
+    <div id="connect-user">
+      <h2>Connect to Unreal Insiders</h2>
+      <button id="connect-ur" class="connect-button">
+        Connect Your Account
+      </button>
+    </div>
+    <div>
+      <p id="notifications"></p>
+    </div>
+    <div id="connect-espn">
       <section>
         <h2>Connect to Unreal Insiders</h2>
-        <button id="unreal-button" class="minimalist-button">
-          Get Leagues
+        <button id="unreal-button" class="connect-button">
+          Connect Leagues
         </button>
       </section>
     </div>
 
     <section id="leagues">
-      <h3 id="leagues-header">My Leagues:</h3>
+      <h3 id="leagues-header">My Connected Leagues:</h3>
       <ul id="league-list"></ul>
     </section>
-
-    <button id="send-data">Link to Unreal Insiders</button>
 
     <script src="popup.js"></script>
   </body>

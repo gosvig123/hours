@@ -1,35 +1,45 @@
 const leagueList = document.getElementById('league-list');
 const leaguesHeader = document.getElementById('leagues-header');
+const userId = chrome.storage.local.get('userId');
+const leaguesFromStorage = chrome.storage.local.get('teamIds');
+const connectUser = document.getElementById('connect-user');
+const connectLeague = document.getElementById('unreal-button');
+const espnContainer = document.getElementById('connect-espn');
+const leagues = document.getElementById('leagues');
+const notifications = document.getElementById('notifications');
 
 document.addEventListener('DOMContentLoaded', () => {
-  const unrealButton = document.getElementById('unreal-button');
-  const sendData = document.getElementById('send-data');
-  const buttonContainer = document.getElementById('button-container');
-
-  chrome.storage.local.get(['teamIds'], (result) => {
-    if (result.teamIds) {
-      displayLeagueList(result.teamIds);
-      buttonContainer.style.display = 'none';
-    } else {
-      sendData.style.display = 'none';
-      leaguesHeader.innerText = '';
+  getActiveUrl().then((currentUrl) => {
+    if (currentUrl === 'https://www.espn.com/') {
+      notifications.innerText = 'Please make sure you are logged in';
+      connectUser.style.display = 'none';
     }
   });
 
-  sendData.addEventListener('click', () => {
-    passLeagueList();
-
-    sendData.style.display = 'none';
-    leagueList.style.display = 'none';
-    leaguesHeader.innerText = 'Your Leagues has been connected';
+  getLeaguesFromStorage().then((league) => {
+    if (league) {
+      displayLeagueList(league);
+      // connectUser.style.display = 'none';
+      connectLeague.innerText = 'Connect More Leagues';
+    }
   });
 
-  unrealButton.addEventListener('click', () => {
-    chrome.runtime.sendMessage({ action: 'getEspnInfo' });
-    buttonContainer.style.display = 'none';
+  getUserId().then((userId) => {
+    if (!userId) {
+      espnContainer.style.display = 'none';
+      leagues.style.display = 'none';
+    }
   });
 
-  // Listen for messages from the background script
+  connectLeague.addEventListener('click', () => {
+    chrome.tabs.update({ url: 'https://espn.com' });
+
+    setTimeout(() => {
+      chrome.runtime.sendMessage({ action: 'getEspnInfo' });
+      espnContainer.style.display = 'none';
+    }, 3000);
+  });
+
   chrome.runtime.onMessage.addListener(
     (request, sender, sendResponse) => {
       if (request.action === 'dataStored') {
@@ -37,8 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         chrome.storage.local.get(['teamIds'], (result) => {
           if (result.teamIds) {
             displayLeagueList(result.teamIds);
-            buttonContainer.style.display = 'none';
-            sendData.style.display = 'block';
+            espnContainer.style.display = 'none';
             leaguesHeader.innerText = 'My Leagues';
           }
         });
@@ -66,11 +75,42 @@ function displayLeagueList(leagues) {
   leagues.forEach((league) => {
     const li = document.createElement('ul');
     const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.checked = true;
     checkbox.classList.add('checkbox');
     li.appendChild(checkbox);
     li.appendChild(document.createTextNode(league.leagueName)); // show teamId instead of leagueName
     leagueList.appendChild(li);
   });
+}
+
+async function getLeaguesFromStorage() {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get('teamIds', (result) => {
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else {
+        resolve(result.teamIds);
+      }
+    });
+  });
+}
+
+async function getUserId() {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get('userId', (result) => {
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else {
+        resolve(result.userId);
+      }
+    });
+  });
+}
+
+async function getActiveUrl() {
+  const tabs = await chrome.tabs.query({
+    active: true,
+    currentWindow: true,
+  });
+  const currentUrl = tabs[0].url;
+  return currentUrl;
 }
