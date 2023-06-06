@@ -1,7 +1,6 @@
 body {
-  width: 300px;
-  height: 200px;
-  padding: 20px;
+  width: 400px;
+  height: 300px;
   background-color: #f0f8ff;
   display: flex;
   flex-direction: column;
@@ -10,6 +9,9 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont,
     'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
     'Helvetica Neue', sans-serif;
+  background-image: src= '/dark-logo.png';
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .connect-button {
@@ -25,44 +27,57 @@ body {
   background-color: #45a049;
 }
 
+#connect-espn {
+  font-size: 16px;
+  padding: 5px 20px;
+}
+
+#connect-user {
+  font-size: 16px;
+  padding: 5px 20px;
+}
+
 .leagues {
   width: 100%;
+  padding: 20px; /* Add some padding to the container */
+  background-color: #f5f5f5; /* Light grey background for better contrast */
+  border-radius: 10px; /* Round the corners a bit */
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+#leagues-header {
+  text-align: center; /* Center the header */
+  color: #333; /* Dark grey text for contrast */
+  font-size: 1.2em; /* Increase font size */
+  font-weight: 600; /* Make header bold */
+  margin-bottom: 15px; /* Add some space below the header */
 }
 
 #league-list {
-  padding: 0;
-  gap: 20px;
-  list-style-type: none;
+  list-style-type: none; /* Remove default list bullet points */
+  padding: 0; /* Remove default padding */
 }
 
 #league-list > li {
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 15px; /* Increase space around each item */
+  border-bottom: 1px solid #ccc; /* Divider between items */
+  text-align: center; /* Center the list text */
+  color: #666; /* Dark grey text */
+  background-color: #0b2257;
+  color: white;
+  font-weight: bold;
+  font-size: 1.1em; /* Increase font size */
+  border-radius: 5px; /* Rounded corners for each list item */
+  margin-bottom: 10px; /* Space between list items */
+  transition: background-color 0.3s; /* Smooth transition */
+}
+
+#league-list > li:hover {
+  background-color: #e6e6e6; /* Change background color on hover */
 }
 
 #league-list > li:last-child {
-  border-bottom: none;
+  border-bottom: none; /* Remove divider from last item */
 }
 
-ul {
-  font-size: large;
-}
-
-.checkbox {
-  margin-right: 10px;
-  cursor: pointer;
-  width: 20px;
-  height: 20px;
-  border: 1px solid #ccc;
-  background-color: white;
-  border-radius: 5px;
-  align-items: center;
-  justify-content: center;
-}
-
-.displayNone {
-  display: none;
-}
+/* Remove unused .checkbox class */

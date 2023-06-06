@@ -11,9 +11,10 @@ const notifications = document.getElementById('notifications');
 document.addEventListener('DOMContentLoaded', () => {
   getActiveUrl().then((currentUrl) => {
     if (currentUrl === 'https://www.espn.com/') {
-      notifications.innerText = 'Please make sure you are logged in';
       connectUser.style.display = 'none';
     }
+    //TODO check if user is logged in an otherwise prompt them to log in.
+    // notifications.innerText = 'Please make sure you are logged in';
   });
 
   getLeaguesFromStorage().then((league) => {
@@ -21,13 +22,15 @@ document.addEventListener('DOMContentLoaded', () => {
       displayLeagueList(league);
       // connectUser.style.display = 'none';
       connectLeague.innerText = 'Connect More Leagues';
+    } else {
+      leaguesHeader.innerText = '';
     }
   });
 
   getUserId().then((userId) => {
     if (!userId) {
-      espnContainer.style.display = 'none';
-      leagues.style.display = 'none';
+      // espnContainer.style.display = 'none';
+      // leagues.style.display = 'none';
     }
   });
 
@@ -36,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setTimeout(() => {
       chrome.runtime.sendMessage({ action: 'getEspnInfo' });
+
       espnContainer.style.display = 'none';
     }, 3000);
   });
@@ -44,25 +48,44 @@ document.addEventListener('DOMContentLoaded', () => {
     (request, sender, sendResponse) => {
       if (request.action === 'dataStored') {
         // New data has been stored, retrieve it and update the display
-        chrome.storage.local.get(['teamIds'], (result) => {
-          if (result.teamIds) {
-            displayLeagueList(result.teamIds);
-            espnContainer.style.display = 'none';
-            leaguesHeader.innerText = 'My Leagues';
+        chrome.storage.local.get(
+          ['teamIds', 'SWID', 'espnCookies'],
+          (result) => {
+            if (result.teamIds) {
+              displayLeagueList(result.teamIds);
+              const teamId = result.teamIds.map((team) => {
+                return (team = team.teamId);
+              });
+              leagueName = result.teamIds.map((team) => {
+                return (team = team.leagueName);
+              });
+
+              leaguesHeader.innerText = 'My Connected Leagues';
+
+              passLeagueList(
+                result.SWID,
+                result.espnCookies,
+                teamId,
+                leagueName
+              );
+            }
           }
-        });
+        );
       }
     }
   );
 });
 
-async function passLeagueList() {
+async function passLeagueList(swid, s2, leagueIds, leagueName) {
   await fetch('https://eocy7xljz6ao3x5.m.pipedream.net/update', {
     method: 'PATCH',
     headers: {},
     body: JSON.stringify({
-      extension_token: 'token from the extension',
-      id: '1684616983768x979685721224051500',
+      id: '1685194602638x406907844304061700',
+      espn_SWID: swid,
+      espn_s2: s2,
+      espn_league_id: leagueIds,
+      espn_league: leagueName,
     }),
   })
     .then((response) => response.json())
@@ -73,11 +96,8 @@ async function passLeagueList() {
 
 function displayLeagueList(leagues) {
   leagues.forEach((league) => {
-    const li = document.createElement('ul');
-    const checkbox = document.createElement('input');
-    checkbox.classList.add('checkbox');
-    li.appendChild(checkbox);
-    li.appendChild(document.createTextNode(league.leagueName)); // show teamId instead of leagueName
+    const li = document.createElement('li'); // Changed from 'ul' to 'li'
+    li.appendChild(document.createTextNode(league.leagueName));
     leagueList.appendChild(li);
   });
 }
