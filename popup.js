@@ -11,10 +11,8 @@ const notifications = document.getElementById('notifications');
 document.addEventListener('DOMContentLoaded', () => {
   getActiveUrl().then((currentUrl) => {
     if (currentUrl === 'https://www.espn.com/') {
-      connectUser.style.display = 'none';
+      chrome.runtime.sendMessage({ action: 'getLeagues' });
     }
-    //TODO check if user is logged in an otherwise prompt them to log in.
-    // notifications.innerText = 'Please make sure you are logged in';
   });
 
   getLeaguesFromStorage().then((league) => {
@@ -71,6 +69,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
           }
         );
+      }
+      if (request.action === 'weGotLeagues') {
+      }
+      if (request.action === 'noLeagues') {
+        espnContainer.style.display = 'none';
+        leagues.style.display = 'none';
+        notifications.innerText = ' No Leagues Found';
       }
     }
   );
@@ -134,3 +139,17 @@ async function getActiveUrl() {
   const currentUrl = tabs[0].url;
   return currentUrl;
 }
+
+function showError(message) {
+  const notificationsDiv = document.getElementById('notifications');
+  notificationsDiv.textContent = message;
+  notificationsDiv.classList.add('active');
+}
+
+function hideError() {
+  const notificationsDiv = document.getElementById('notifications');
+  notificationsDiv.textContent = '';
+  notificationsDiv.classList.remove('active');
+}
+
+showError('Please login or join an ESPN league');

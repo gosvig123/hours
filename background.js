@@ -38,7 +38,29 @@ chrome.runtime.onMessage.addListener(
           }
         }
       );
-      return true; 
+      return true;
+    }
+    if (request.action === 'getLeagues') {
+      chrome.tabs.query(
+        { active: true, currentWindow: true },
+        (tabs) => {
+          if (tabs[0] && tabs[0].id) {
+            chrome.tabs.sendMessage(
+              tabs[0].id,
+              { action: 'getLeagues' },
+              (response) => {
+                if (response) {
+                  chrome.runtime.sendMessage({
+                    action: 'weGotLeagues',
+                  });
+                } else {
+                  chrome.runtime.sendMessage({ action: 'noLeagues' });
+                }
+              }
+            );
+          }
+        }
+      );
     }
   }
 );

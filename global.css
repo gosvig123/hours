@@ -80,4 +80,20 @@ body {
   border-bottom: none; /* Remove divider from last item */
 }
 
-/* Remove unused .checkbox class */
+#notifications {
+  width: 80%; /* Adjust to your needs */
+  padding: 15px;
+  color: #721c24; /* Dark red */
+  background-color: #f8d7da; /* Light red */
+  border: 1px solid #f5c6cb; /* Mid-tone red */
+  border-radius: 4px;
+  margin: 10px auto; /* Center the notifications div horizontally */
+  text-align: center;
+  font-weight: bold;
+  transition: opacity 0.3s ease;
+  opacity: 0; /* By default, the notifications div is invisible */
+}
+
+#notifications.active {
+  opacity: 1; /* When the .active class is added, the notifications div becomes visible */
+}

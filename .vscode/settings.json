@@ -1,5 +1,13 @@
 {
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": "active",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
-  "editor.autoClosingBrackets": "always"
+  "editor.defaultColorDecorators": false,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true,
+    "force.sortImports": true
+  },
+  "javascript.format.enable": true,
+  "editor.matchBrackets": "always",
+  "editor.guides.highlightActiveBracketPair": true
 }
