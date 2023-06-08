@@ -62,6 +62,14 @@ chrome.runtime.onMessage.addListener(
           sendResponse({ error: '#fantasy-feed-items not found' });
         }
       }
+      if (request.action === 'getUserId') {
+        const userId =
+          document.querySelectorAll('.userId')[1].outerText;
+
+        console.log(userId);
+        sendResponse({ userId: userId });
+        return true;
+      }
     } catch (error) {
       console.error('Error getting cookies:', error);
     }

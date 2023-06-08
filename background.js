@@ -62,5 +62,51 @@ chrome.runtime.onMessage.addListener(
         }
       );
     }
+    if (request.action === 'getUserId') {
+      try {
+        chrome.tabs.query(
+          { active: true, currentWindow: true },
+          (tabs) => {
+            let tab = tabs[0];
+
+            if (tab && tab.id && tab.status === 'complete') {
+              chrome.tabs.sendMessage(
+                tab.id,
+                { action: 'getUserId' },
+                (response) => {
+                  if (chrome.runtime.lastError) {
+                    console.log(
+                      'ERROR: ' + chrome.runtime.lastError.message
+                    );
+                  } else {
+                    if (response) {
+                      chrome.storage.local.set(
+                        {
+                          userId: response.userId,
+                        },
+                        () => {
+                          chrome.runtime.sendMessage({
+                            action: 'userIdStored',
+                          }); // Respond to the popup after the userId is stored.
+                        }
+                      );
+                      return true; // Keep the sendResponse function alive for the asynchronous operation.
+                    }
+                  }
+                }
+              );
+            } else {
+              console.log(
+                'Tab is not fully loaded yet or does not exist'
+              );
+            }
+          }
+        );
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    return true;
   }
 );

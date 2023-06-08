@@ -7,11 +7,31 @@ const connectLeague = document.getElementById('unreal-button');
 const espnContainer = document.getElementById('connect-espn');
 const leagues = document.getElementById('leagues');
 const notifications = document.getElementById('notifications');
+const userInfo = document.getElementById('user-info');
+const connectAccountButton = document.getElementById('connect-ur');
 
 document.addEventListener('DOMContentLoaded', () => {
+  chrome.storage.local.get(['userId'], function (result) {
+    if (result && result.userId) {
+      userInfo.innerText = `You are logged in as ${result.userId}`;
+      connectUser.style.display = 'none';
+
+      userInfo.classList.add('active');
+    } else {
+      espnContainer.style.display = 'none';
+    }
+  });
+
+  connectAccountButton.addEventListener('click', () => {
+    chrome.tabs.update({ url: 'https://siders.ai/espn_ext' });
+  });
+
   getActiveUrl().then((currentUrl) => {
-    if (currentUrl === 'https://www.espn.com/') {
+    if (currentUrl.includes('espn.com')) {
       chrome.runtime.sendMessage({ action: 'getLeagues' });
+    }
+    if (currentUrl === 'https://siders.ai/espn_ext') {
+      chrome.runtime.sendMessage({ action: 'getUserId' });
     }
   });
 
@@ -22,13 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
       connectLeague.innerText = 'Connect More Leagues';
     } else {
       leaguesHeader.innerText = '';
-    }
-  });
-
-  getUserId().then((userId) => {
-    if (!userId) {
-      // espnContainer.style.display = 'none';
-      // leagues.style.display = 'none';
     }
   });
 
@@ -59,6 +72,9 @@ document.addEventListener('DOMContentLoaded', () => {
               });
 
               leaguesHeader.innerText = 'My Connected Leagues';
+              showSuccess(
+                'You have now connected your espn leagues to Siders.ai'
+              );
 
               passLeagueList(
                 result.SWID,
@@ -71,11 +87,24 @@ document.addEventListener('DOMContentLoaded', () => {
         );
       }
       if (request.action === 'weGotLeagues') {
+        console.log('we got leagues');
       }
       if (request.action === 'noLeagues') {
+        showError(
+          'Please make sure you are logged in and have joined at least 1 league'
+        );
         espnContainer.style.display = 'none';
         leagues.style.display = 'none';
-        notifications.innerText = ' No Leagues Found';
+      }
+
+      if (request.action === 'userIdStored') {
+        chrome.storage.local.get(['userId'], function (result) {
+          userInfo.innerText = `You are logged in as ${result.userId}`;
+          connectUser.style.display = 'none';
+
+          userInfo.classList.add('active');
+          espnContainer.style.display = 'block';
+        });
       }
     }
   );
@@ -99,11 +128,16 @@ async function passLeagueList(swid, s2, leagueIds, leagueName) {
     });
 }
 
+let addedLeagues = new Set();
+
 function displayLeagueList(leagues) {
   leagues.forEach((league) => {
-    const li = document.createElement('li'); // Changed from 'ul' to 'li'
-    li.appendChild(document.createTextNode(league.leagueName));
-    leagueList.appendChild(li);
+    if (!addedLeagues.has(league.leagueName)) {
+      const li = document.createElement('li');
+      li.appendChild(document.createTextNode(league.leagueName));
+      leagueList.appendChild(li);
+      addedLeagues.add(league.leagueName);
+    }
   });
 }
 
@@ -125,7 +159,7 @@ async function getUserId() {
       if (chrome.runtime.lastError) {
         reject(chrome.runtime.lastError);
       } else {
-        resolve(result.userId);
+        resolve(result);
       }
     });
   });
@@ -152,4 +186,8 @@ function hideError() {
   notificationsDiv.classList.remove('active');
 }
 
-showError('Please login or join an ESPN league');
+function showSuccess(message) {
+  const notificationsDiv = document.getElementById('notifications');
+  notificationsDiv.textContent = message;
+  notificationsDiv.classList.add('active', 'success');
+}

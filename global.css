@@ -97,3 +97,27 @@ body {
 #notifications.active {
   opacity: 1; /* When the .active class is added, the notifications div becomes visible */
 }
+
+#notifications.success {
+  color: #155724; /* Dark green */
+  background-color: #d4edda; /* Light green */
+  border-color: #c3e6cb; /* Mid-tone green */
+}
+
+#user-info {
+  width: 80%; /* Adjust to your needs */
+  padding: 15px;
+  color: #383d41; /* Dark grey */
+  background-color: #e2e3e5; /* Light grey */
+  border: 1px solid #d6d8db; /* Mid-tone grey */
+  border-radius: 4px;
+  margin: 10px auto; /* Center the notifications div horizontally */
+  text-align: center;
+  font-weight: bold;
+  transition: opacity 0.3s ease;
+  opacity: 0; /* By default, the user-info div is invisible */
+}
+
+#user-info.active {
+  opacity: 1; /* When the .active class is added, the user-info div becomes visible */
+}
