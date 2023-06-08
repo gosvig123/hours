@@ -1,6 +1,6 @@
 body {
   width: 400px;
-  height: 300px;
+  height: 600px;
   background-color: #f0f8ff;
   display: flex;
   flex-direction: column;
@@ -92,10 +92,12 @@ body {
   font-weight: bold;
   transition: opacity 0.3s ease;
   opacity: 0; /* By default, the notifications div is invisible */
+  display: none;
 }
 
 #notifications.active {
   opacity: 1; /* When the .active class is added, the notifications div becomes visible */
+  display: block;
 }
 
 #notifications.success {
@@ -116,8 +118,14 @@ body {
   font-weight: bold;
   transition: opacity 0.3s ease;
   opacity: 0; /* By default, the user-info div is invisible */
+  display: none;
 }
 
 #user-info.active {
   opacity: 1; /* When the .active class is added, the user-info div becomes visible */
+  display: block;
+}
+
+#logo {
+  padding-top: 2em;
 }

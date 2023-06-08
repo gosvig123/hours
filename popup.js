@@ -94,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
           'Please make sure you are logged in and have joined at least 1 league'
         );
         espnContainer.style.display = 'none';
-        leagues.style.display = 'none';
       }
 
       if (request.action === 'userIdStored') {
