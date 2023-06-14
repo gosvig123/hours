@@ -63,11 +63,15 @@ chrome.runtime.onMessage.addListener(
         }
       }
       if (request.action === 'getUserId') {
-        const userId =
-          document.querySelectorAll('.userId')[1].outerText;
+        const user = document.querySelectorAll('.userId');
+        const userId = user[1].outerText;
+        let phone = user[0].outerText.split('@')[0];
+        phone = `(${phone.slice(0, 3)}) ${phone.slice(
+          3,
+          6
+        )} ${phone.slice(6)}`;
 
-        console.log(userId);
-        sendResponse({ userId: userId });
+        sendResponse({ userId: userId, phone: phone });
         return true;
       }
     } catch (error) {

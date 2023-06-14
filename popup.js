@@ -11,9 +11,9 @@ const userInfo = document.getElementById('user-info');
 const connectAccountButton = document.getElementById('connect-ur');
 
 document.addEventListener('DOMContentLoaded', () => {
-  chrome.storage.local.get(['userId'], function (result) {
-    if (result && result.userId) {
-      userInfo.innerText = `You are logged in as ${result.userId}`;
+  chrome.storage.local.get(['phone'], function (result) {
+    if (result && result.phone) {
+      userInfo.innerText = `You are logged in as ${result.phone}`;
       connectUser.style.display = 'none';
 
       userInfo.classList.add('active');
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (request.action === 'dataStored') {
         // New data has been stored, retrieve it and update the display
         chrome.storage.local.get(
-          ['teamIds', 'SWID', 'espnCookies'],
+          ['teamIds', 'SWID', 'espnCookies', 'userId'],
           (result) => {
             if (result.teamIds) {
               displayLeagueList(result.teamIds);
@@ -80,7 +80,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 result.SWID,
                 result.espnCookies,
                 teamId,
-                leagueName
+                leagueName,
+                result.userId
               );
             }
           }
@@ -97,8 +98,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (request.action === 'userIdStored') {
-        chrome.storage.local.get(['userId'], function (result) {
-          userInfo.innerText = `You are logged in as ${result.userId}`;
+        chrome.storage.local.get(['phone'], function (result) {
+          userInfo.innerText = `You are logged in as ${result.phone}`;
           connectUser.style.display = 'none';
 
           userInfo.classList.add('active');
@@ -109,12 +110,18 @@ document.addEventListener('DOMContentLoaded', () => {
   );
 });
 
-async function passLeagueList(swid, s2, leagueIds, leagueName) {
-  await fetch('https://eocy7xljz6ao3x5.m.pipedream.net/update', {
+async function passLeagueList(
+  swid,
+  s2,
+  leagueIds,
+  leagueName,
+  userId
+) {
+  await fetch('https://eorl6hfxaywlbm6.m.pipedream.net/update', {
     method: 'PATCH',
     headers: {},
     body: JSON.stringify({
-      id: '1685194602638x406907844304061700',
+      id: userId,
       espn_SWID: swid,
       espn_s2: s2,
       espn_league_id: leagueIds,

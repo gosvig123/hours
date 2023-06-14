@@ -83,6 +83,7 @@ chrome.runtime.onMessage.addListener(
                       chrome.storage.local.set(
                         {
                           userId: response.userId,
+                          phone: response.phone,
                         },
                         () => {
                           chrome.runtime.sendMessage({
