@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currentUrl.includes('espn.com')) {
       chrome.runtime.sendMessage({ action: 'getLeagues' });
     }
-    if (currentUrl === 'https://siders.ai/espn_ext') {
+    if (currentUrl.includes('/espn_ext')) {
       chrome.runtime.sendMessage({ action: 'getUserId' });
     }
   });
