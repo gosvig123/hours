@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (league) {
       displayLeagueList(league);
       // connectUser.style.display = 'none';
-      connectLeague.innerText = 'Connect More Leagues';
+      connectLeague.innerText = 'Connect More ESPN Leagues';
     } else {
       leaguesHeader.innerText = '';
     }
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
               leaguesHeader.innerText = 'My Connected Leagues';
               showSuccess(
-                'You have now connected your espn leagues to Siders.ai'
+                'You have now connected your espn leagues to siders.ai'
               );
 
               passLeagueList(
