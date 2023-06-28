@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
           connectUser.style.display = 'none';
 
           userInfo.classList.add('active');
-          espnContainer.style.display = 'block';
+          espnContainer.style.display = 'flex';
         });
       }
     }
