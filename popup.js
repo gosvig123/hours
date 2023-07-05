@@ -11,6 +11,7 @@ const userInfo = document.getElementById('user-info');
 const connectAccountButton = document.getElementById('connect-ur');
 
 document.addEventListener('DOMContentLoaded', () => {
+  leagues.style.display = 'none';
   chrome.storage.local.get(['phone'], function (result) {
     if (result && result.phone) {
       userInfo.innerText = `You are logged in as ${result.phone}`;
@@ -35,6 +36,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  setInterval(() => {
+    getActiveUrl().then((currentUrl) => {
+      if (currentUrl.includes('espn.com')) {
+        chrome.runtime.sendMessage({ action: 'getEspnInfo' });
+      }
+      if (currentUrl.includes('/espn_ext')) {
+        chrome.runtime.sendMessage({ action: 'getUserId' });
+      }
+    });
+  }, 2000);
+
   getLeaguesFromStorage().then((league) => {
     if (league) {
       displayLeagueList(league);
@@ -50,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setTimeout(() => {
       chrome.runtime.sendMessage({ action: 'getEspnInfo' });
-
       espnContainer.style.display = 'none';
     }, 3000);
   });
@@ -71,11 +82,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 return (team = team.leagueName);
               });
 
-              leaguesHeader.innerText = 'My Connected Leagues';
               showSuccess(
-                'You have now connected your espn leagues to siders.ai'
+                'You have now connected your espn leagues to siders.ai, you will be redirected back to siders.ai in a few seconds'
               );
-
+              connectLeague.style.display = 'none';
               passLeagueList(
                 result.SWID,
                 result.espnCookies,
@@ -83,6 +93,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 leagueName,
                 result.userId
               );
+
+              setTimeout(() => {
+                // change the site to espn
+                chrome.tabs.update({
+                  url: 'https://siders.ai/espn_choose',
+                });
+              }, 5000);
             }
           }
         );
@@ -90,11 +107,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if (request.action === 'weGotLeagues') {
         console.log('we got leagues');
       }
+
+      let count = 0;
       if (request.action === 'noLeagues') {
-        showError(
-          'Please make sure you are logged in and have joined at least 1 league'
-        );
-        espnContainer.style.display = 'none';
+        count++;
+        if (count === 3) {
+          showError(
+            'Please make sure you are logged in and have joined at least 1 league'
+          );
+          espnContainer.style.display = 'none';
+        }
       }
 
       if (request.action === 'userIdStored') {
