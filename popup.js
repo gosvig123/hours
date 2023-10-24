@@ -78,8 +78,11 @@ document.addEventListener('DOMContentLoaded', () => {
               const teamId = result.teamIds.map((team) => {
                 return (team = team.teamId);
               });
-              leagueName = result.teamIds.map((team) => {
+              const leagueName = result.teamIds.map((team) => {
                 return (team = team.leagueName);
+              });
+              const sportsType = result.teamIds.map((team) => {
+                return (team = team.sportsType);
               });
 
               showSuccess(
@@ -91,7 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 result.espnCookies,
                 teamId,
                 leagueName,
-                result.userId
+                result.userId,
+                sportsType
               );
 
               setTimeout(() => {
@@ -137,7 +141,8 @@ async function passLeagueList(
   s2,
   leagueIds,
   leagueName,
-  userId
+  userId,
+  sportsType
 ) {
   await fetch('https://eorl6hfxaywlbm6.m.pipedream.net/update', {
     method: 'PATCH',
@@ -148,6 +153,7 @@ async function passLeagueList(
       espn_s2: s2,
       espn_league_id: leagueIds,
       espn_league: leagueName,
+      espn_sport: sportsType,
     }),
   })
     .then((response) => response.json())

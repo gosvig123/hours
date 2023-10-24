@@ -15,22 +15,30 @@ chrome.runtime.onMessage.addListener(
         let teamIds = [];
 
         favItems.forEach((item) => {
-          const link = item.querySelector('a');
+          try {
+            const link = item.querySelector('a');
 
-          const teamId = link.href
-            .split('leagueId=')[1]
-            .split('&')[0];
-          const leagueName = item.querySelector(
-            '.favItem__subHead'
-          ).innerText;
+            const teamId = link.href
+              .split('leagueId=')[1]
+              .split('&')[0];
+            const leagueName = item.querySelector(
+              '.favItem__subHead'
+            ).innerText;
+            const sportsType = link.href
+              .split('espn.com/')[1]
+              .split('/')[0];
 
-          const leagueInfo = {
-            teamId,
-            leagueName,
-          };
+            const leagueInfo = {
+              teamId,
+              leagueName,
+              sportsType,
+            };
 
-          if (!teamIds.some((team) => team.teamId === teamId)) {
-            teamIds.push(leagueInfo);
+            if (!teamIds.some((team) => team.teamId === teamId)) {
+              teamIds.push(leagueInfo);
+            }
+          } catch (error) {
+            console.error(error);
           }
         });
 
