@@ -1,19 +1,31 @@
 {
   "manifest_version": 3,
-  "name": "siders",
-  "version": "1.0.1",
+  "name": "siders.ai",
+  "version": "1.0.2",
   "action": {
     "default_popup": "popup.html"
   },
-  "permissions": ["tabs", "storage"],
-  "host_permissions": ["*://*.espn.com/*", "*://*.siders.ai/*"],
+  "description": "Google Chrome Extension designed to seamlessly connect your ESPN leagues to your sliders.ai account.",
+  "permissions": [
+    "tabs",
+    "storage"
+  ],
+  "host_permissions": [
+    "*://*.espn.com/*",
+    "*://*.siders.ai/*"
+  ],
   "background": {
     "service_worker": "background.js"
   },
   "content_scripts": [
     {
-      "matches": ["*://*.espn.com/*", "*://*.siders.ai/*"],
-      "js": ["content.js"],
+      "matches": [
+        "*://*.espn.com/*",
+        "*://*.siders.ai/*"
+      ],
+      "js": [
+        "content.js"
+      ],
       "run_at": "document_idle"
     }
   ],
